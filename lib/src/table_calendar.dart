@@ -204,6 +204,8 @@ class TableCalendar<T> extends StatefulWidget {
   /// Called when the calendar is created. Exposes its PageController.
   final void Function(PageController pageController)? onCalendarCreated;
 
+  final bool isShowOnlyEvent;
+
   /// Creates a `TableCalendar` widget.
   TableCalendar({
     Key? key,
@@ -259,6 +261,7 @@ class TableCalendar<T> extends StatefulWidget {
     this.onHeaderLongPressed,
     this.onPageChanged,
     this.onFormatChanged,
+    this.isShowOnlyEvent = true,
     this.onCalendarCreated,
   })  : assert(availableCalendarFormats.keys.contains(calendarFormat)),
         assert(availableCalendarFormats.length <= CalendarFormat.values.length),
@@ -615,13 +618,19 @@ class _TableCalendarState<T> extends State<TableCalendar<T>> {
           children.add(rangeHighlight);
         }
 
-        final isToday = isSameDay(day, widget.currentDay);
+        bool isToday = isSameDay(day, widget.currentDay);
+        final events = widget.eventLoader?.call(day) ?? [];
+        bool isEventDay = false;
+        if (events.isNotEmpty) {
+          isEventDay = true;
+        }
         final isDisabled = _isDayDisabled(day);
         final isWeekend = _isWeekend(day, weekendDays: widget.weekendDays);
 
         Widget content = CellContent(
           key: ValueKey('CellContent-${day.year}-${day.month}-${day.day}'),
           day: day,
+          isEventDay: isEventDay,
           focusedDay: focusedDay,
           calendarStyle: widget.calendarStyle,
           calendarBuilders: widget.calendarBuilders,
@@ -696,6 +705,9 @@ class _TableCalendarState<T> extends State<TableCalendar<T>> {
   }
 
   Widget _buildSingleMarker(DateTime day, T event, double markerSize) {
+    if (widget.isShowOnlyEvent) {
+      return const SizedBox();
+    }
     return widget.calendarBuilders.singleMarkerBuilder
             ?.call(context, day, event) ??
         Container(

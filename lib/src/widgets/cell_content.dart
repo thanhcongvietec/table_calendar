@@ -1,6 +1,7 @@
 // Copyright 2019 Aleksander Woźniak
 // SPDX-License-Identifier: Apache-2.0
 
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 
@@ -21,6 +22,7 @@ class CellContent extends StatelessWidget {
   final bool isDisabled;
   final bool isHoliday;
   final bool isWeekend;
+  final bool isEventDay;
   final CalendarStyle calendarStyle;
   final CalendarBuilders calendarBuilders;
 
@@ -40,6 +42,7 @@ class CellContent extends StatelessWidget {
     required this.isDisabled,
     required this.isHoliday,
     required this.isWeekend,
+    this.isEventDay = false,
     this.locale,
   }) : super(key: key);
 
@@ -107,13 +110,14 @@ class CellContent extends StatelessWidget {
             alignment: alignment,
             child: Text(text, style: calendarStyle.rangeEndTextStyle),
           );
-    } else if (isToday && isTodayHighlighted) {
+    } else if ((isToday || isEventDay) && isTodayHighlighted) {
+
       cell = calendarBuilders.todayBuilder?.call(context, day, focusedDay) ??
           AnimatedContainer(
             duration: duration,
             margin: margin,
             padding: padding,
-            decoration: calendarStyle.todayDecoration,
+            decoration: isToday ? calendarStyle.todayDecoration : calendarStyle.eventDecoration,
             alignment: alignment,
             child: Text(text, style: calendarStyle.todayTextStyle),
           );

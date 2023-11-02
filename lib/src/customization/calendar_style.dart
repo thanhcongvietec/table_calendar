@@ -77,6 +77,8 @@ class CalendarStyle {
   /// Decoration for a day cell that matches the current day.
   final Decoration todayDecoration;
 
+  final Decoration eventDecoration;
+
   /// TextStyle for day cells that are currently marked as selected by `selectedDayPredicate`.
   final TextStyle selectedTextStyle;
 
@@ -227,6 +229,10 @@ class CalendarStyle {
     this.rowDecoration = const BoxDecoration(),
     this.tableBorder = const TableBorder(),
     this.tablePadding = const EdgeInsets.all(0),
+    this.eventDecoration = const BoxDecoration(
+      color: const Color(0xFFFFFFFF),
+      shape: BoxShape.circle,
+    )
   });
 }
 
