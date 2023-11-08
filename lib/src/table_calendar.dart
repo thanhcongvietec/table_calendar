@@ -261,7 +261,7 @@ class TableCalendar<T> extends StatefulWidget {
     this.onHeaderLongPressed,
     this.onPageChanged,
     this.onFormatChanged,
-    this.isShowOnlyEvent = true,
+    this.isShowOnlyEvent = false,
     this.onCalendarCreated,
   })  : assert(availableCalendarFormats.keys.contains(calendarFormat)),
         assert(availableCalendarFormats.length <= CalendarFormat.values.length),
@@ -621,7 +621,7 @@ class _TableCalendarState<T> extends State<TableCalendar<T>> {
         bool isToday = isSameDay(day, widget.currentDay);
         final events = widget.eventLoader?.call(day) ?? [];
         bool isEventDay = false;
-        if (events.isNotEmpty) {
+        if (events.isNotEmpty && widget.isShowOnlyEvent) {
           isEventDay = true;
         }
         final isDisabled = _isDayDisabled(day);
@@ -661,23 +661,24 @@ class _TableCalendarState<T> extends State<TableCalendar<T>> {
                 (shorterSide - widget.calendarStyle.cellMargin.vertical) *
                     widget.calendarStyle.markerSizeScale;
 
-            final markerAutoAlignmentTop = center +
-                (shorterSide - widget.calendarStyle.cellMargin.vertical) / 2 -
-                (markerSize * widget.calendarStyle.markersAnchor);
+            // final markerAutoAlignmentTop = center +
+            //     (shorterSide - widget.calendarStyle.cellMargin.vertical) / 2 -
+            //     (markerSize * widget.calendarStyle.markersAnchor);
 
             markerWidget = PositionedDirectional(
-              top: widget.calendarStyle.markersAutoAligned
-                  ? markerAutoAlignmentTop
-                  : widget.calendarStyle.markersOffset.top,
-              bottom: widget.calendarStyle.markersAutoAligned
-                  ? null
-                  : widget.calendarStyle.markersOffset.bottom,
-              start: widget.calendarStyle.markersAutoAligned
-                  ? null
-                  : widget.calendarStyle.markersOffset.start,
-              end: widget.calendarStyle.markersAutoAligned
-                  ? null
-                  : widget.calendarStyle.markersOffset.end,
+              bottom: 8,
+              // top: widget.calendarStyle.markersAutoAligned
+              //     ? null
+              //     : widget.calendarStyle.markersOffset.top,
+              // bottom: widget.calendarStyle.markersAutoAligned
+              //     ? null
+              //     : widget.calendarStyle.markersOffset.bottom,
+              // start: widget.calendarStyle.markersAutoAligned
+              //     ? null
+              //     : widget.calendarStyle.markersOffset.start,
+              // end: widget.calendarStyle.markersAutoAligned
+              //     ? null
+              //     : widget.calendarStyle.markersOffset.end,
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: events
